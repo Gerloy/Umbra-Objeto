@@ -5,6 +5,10 @@ cmake_minimum_required(VERSION 3.13)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+include_directories(
+	${CMAKE_SOURCE_DIR}/include)
+
+file(GLOB_RECURSE SOURCE_FILES src/*.c)
 
 # Initialise pico_sdk from installed location
 # (note this can come from environment, CMake cache etc)
@@ -37,7 +41,7 @@ include_directories(
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(prueba-umbra-1 prueba-umbra-1.cpp  Servo.cpp)
+add_executable(prueba-umbra-1 prueba-umbra-1.cpp ${SOURCE_FILES})
 
 pico_set_program_name(prueba-umbra-1 "prueba-umbra-1")
 pico_set_program_version(prueba-umbra-1 "0.1")
@@ -49,11 +53,15 @@ pico_enable_stdio_usb(prueba-umbra-1 0)
 # Add the standard library to the build
 target_link_libraries(prueba-umbra-1
         pico_stdlib
-        hardware_pwm)
+        hardware_pwm
+        pico_lwip_core)
 
 # Add the standard include files to the build
 target_include_directories(prueba-umbra-1 PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/utils
+        ${CMAKE_CURRENT_LIST_DIR}/include
+)
+link_directories(
+        ${CMAKE_CURRENT_LIST_DIR}/include
 )
 
 # Add any user requested libraries
